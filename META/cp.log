@@ -1,0 +1,10 @@
+INFO: Platform: linux
+INFO: Version Info: v0.3.0
+DEBUG: Log Path: cp.log
+DEBUG: command: ['python', '/home/jhelmer/github/cold-backup/main.py']
+DEBUG: file: None
+DEBUG: pause: True
+DEBUG: repl: python
+DEBUG: args: ['/home/jhelmer/github/cold-backup/main.py']
+INFO: return code: 0 (0x0)
+INFO: elapsed time: 0.059701
