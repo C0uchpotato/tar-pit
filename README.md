@@ -6,7 +6,7 @@ The purpose of this program is to automatically create a backup (tar to begin wi
 
 Dependencies
 --
-{Dmuth's tarsplit}(https://github.com/dmuth/tarsplit)
+[Dmuth's tarsplit](https://github.com/dmuth/tarsplit)
 This will be installed automatically using pip to the local profile
 
 
