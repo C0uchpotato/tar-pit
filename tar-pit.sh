@@ -3,7 +3,7 @@ DIR=~/.config/tar-pit
 USER_CONFIG=~/.config/tar-pit/backup.txt
 DEFAULT_CONFIG=~/.config/tar-pit/home_index.txt
 CONVERSION=1000000000
-TAR=~/tar-pit/out.tar
+TAR=out.tar
 TARGET=~/tar-pit
 #Establish config directory
 
@@ -40,7 +40,7 @@ if [ -e $USER_CONFIG ] ; then
   cd ~
   echo "User defined config found"
   echo "Making tar file, this may take a while"
-  tar --zstd -cvhf out.tar --verbatim-files-from --files-from=$USER_CONFIG ##TODO: Progress bar
+  tar  -zcvhf $TAR --verbatim-files-from --files-from=$USER_CONFIG ##TODO: Progress bar
 
 #need to use pv or some other method to create an ETA or progress bar
 
@@ -48,7 +48,7 @@ else
   echo "No modified config file found, defaulting to "tar"-ing entire home directory"
   cd ~
   echo "Making tar file, this may take a while"
-  tar -cvzhf out.tar --files-from=$DEFAULT_CONFIG ##TODO: Progress bar
+  tar -zcvhf $TAR --files-from=$DEFAULT_CONFIG ##TODO: Progress bar
 fi
 
 #Setup target directory, and move resulting tar file
@@ -58,7 +58,7 @@ else
   mkdir $TARGET
 fi
 
-mv out.tar $TARGET
+mv $TAR $TARGET
 echo "tar file completed"
 echo "out.tar moved to ~/tar-pit"
 
@@ -90,5 +90,4 @@ if [ $CHUNKS -lt 2 ]; then
 else
   echo "Splitting tarball, please be patient"
   tarsplit $TAR $CHUNKS
-  rm $TAR
 fi

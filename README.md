@@ -12,6 +12,8 @@ This will be installed automatically using pip to the local profile
 
 Roadmap
 --
-##TODO: Verify chunk sizes
+##TODO: Verify chunk sizes##
 
-##TODO: Auto burn to cd
+##TODO: Auto burn to cd##
+
+##TODO: Make a progress bar for tar process##
