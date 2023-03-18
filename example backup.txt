@@ -1,0 +1,9 @@
+.vimrc
+.zshrc
+.bashrc
+Calibre
+Documents
+Downloads
+Obsidian
+.ssh
+github

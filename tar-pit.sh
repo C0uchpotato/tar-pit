@@ -40,7 +40,7 @@ if [ -e $USER_CONFIG ] ; then
   cd ~
   echo "User defined config found"
   echo "Making tar file, this may take a while"
-  tar  -zcvhf $TAR --verbatim-files-from --files-from=$USER_CONFIG ##TODO: Progress bar
+  tar  -jcvhf $TAR --verbatim-files-from --files-from=$USER_CONFIG ##TODO: Progress bar
 
 #need to use pv or some other method to create an ETA or progress bar
 
@@ -48,7 +48,7 @@ else
   echo "No modified config file found, defaulting to "tar"-ing entire home directory"
   cd ~
   echo "Making tar file, this may take a while"
-  tar -zcvhf $TAR --files-from=$DEFAULT_CONFIG ##TODO: Progress bar
+  tar -jcvhf $TAR --files-from=$DEFAULT_CONFIG ##TODO: Progress bar
 fi
 
 #Setup target directory, and move resulting tar file
