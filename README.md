@@ -24,8 +24,10 @@ This will be installed automatically using pip to the local profile
 
 Roadmap
 --
-##TODO: Verify chunk sizes##
+**Create tar, run tarsplit, compress split tar file(s)**
 
-##TODO: Auto burn to cd##
+**TODO: Verify chunk sizes**
 
-##TODO: Make a progress bar for tar process##
+**TODO: Auto burn to cd**
+
+**TODO: Make a progress bar for tar process**

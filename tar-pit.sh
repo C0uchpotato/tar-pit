@@ -86,7 +86,7 @@ CHUNKS=`expr $TAR_SIZE / 7`
 CHUNKS=`expr $CHUNKS + 1`
 
 if [ $CHUNKS -lt 2 ]; then
-  echo "This tar file will fit on one CD, no reason to split"
+  echo "This tar file will fit on one DVD, no reason to split"
 else
   echo "Splitting tarball, please be patient"
   tarsplit $TAR $CHUNKS
