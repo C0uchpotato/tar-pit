@@ -21,10 +21,23 @@ Dependencies
 [Dmuth's tarsplit](https://github.com/dmuth/tarsplit)
 This will be installed automatically using pip to the local profile
 
+Bash
+
+Python3
+
+Return Values
+--
+
+0 or nothing    Program ran successfully
+
+1   Program could not find a required directory, either create it or double check that you have write
+privelages in .config and ~
+
+
 
 Roadmap
 --
-**Create tar, run tarsplit, compress split tar file(s)**
+**TODO: Create tar, run tarsplit, compress split tar file(s)**
 
 **TODO: Verify chunk sizes**
 
