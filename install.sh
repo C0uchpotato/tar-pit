@@ -6,4 +6,4 @@ echo "copying tar-put to /usr/local/bin"
 sudo cp tar-pit.sh /usr/local/bin
 
 echo "installing tarsplit"
-python3 -m pip install tarsplit > /dev/null
+pip install -r requirements.txt > /dev/null

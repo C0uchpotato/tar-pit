@@ -8,12 +8,12 @@ An example will be hosted under example backup.txt
 
 This script (as of now) has no flags, and takes no input from the user while running
 
+**Warning** If you run this program multiple times, it will overwrite the tar file from previous runs on that day, as each file is named according to the system date
+
 
 
 Mission
 --
-This program is designed with my own needs in mind and may not fit every system, although I plan to build it with the flexibility needed to adjust easily.
-
 The purpose of this program is to automatically create a backup (tar to begin with), of my home directory and important files, then split it to fit on 7.9 GB DVD's.
 
 Dependencies
@@ -31,7 +31,7 @@ Return Values
 0 or nothing    Program ran successfully
 
 1   Program could not find a required directory, either create it or double check that you have write
-privelages in .config and ~
+privileges in .config and ~
 
 
 
