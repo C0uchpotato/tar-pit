@@ -1,2 +1,3 @@
 ###### Requirements without Version Specifiers ######
-tarsplit    #https://github.com/dmuth/tarsplit
+#https://github.com/dmuth/tarsplit
+tarsplit == 1.0
