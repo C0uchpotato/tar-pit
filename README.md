@@ -44,3 +44,9 @@ Roadmap
 **TODO: Auto burn to cd**
 
 **TODO: Make a progress bar for tar process**
+
+**TODO: Compress chunks after tarsplit**
+
+**TODO: Create config file, add options for user to choose compression algo and speed**
+
+**TODO: Create testing**
