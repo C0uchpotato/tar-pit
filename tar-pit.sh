@@ -1,11 +1,12 @@
 #!/bin/bash
 
-DIR=~/.config/tar-pit
-USER_CONFIG=~/.config/tar-pit/backup.txt
-DEFAULT_CONFIG=~/.config/tar-pit/home_index.txt
+DIR=$HOME/.config/tar-pit
+USER_CONFIG=$HOME/.config/tar-pit/backup.txt
+DEFAULT_CONFIG=$HOME/.config/tar-pit/home_index.txt
 CONVERSION=1074000
 TAR="$(date '+%m-%d-%y')".tar
-TARGET=~/tar-pit
+COMP_TAR="$(date '+%m-%d-%y')".tar.gz
+TARGET=$HOME/tar-pit
 #Establish config directory
 #TODO; Create config file for user-enabled options
 
@@ -15,9 +16,9 @@ else
 	mkdir $DIR
 fi
 
-cd ~ || return 1
+cd $HOME || return 1
 #Look for user config file
-ls -a ~ > $DEFAULT_CONFIG
+ls -a $HOME > $DEFAULT_CONFIG
 
 if [ -e "$USER_CONFIG" ] ; then
   echo "User defined config exists"
@@ -29,23 +30,24 @@ fi
 echo "Configuration complete"
 echo "home_index updated"
 
-#Read from either default or user config, then tar respective selections
-cd ~/.config/tar-pit || return 1
-
+#Read from either default or user config, then tar respective selections; return 1 for a failure
+cd $HOME/.config/tar-pit || return 1
+clear
 if [ -e $USER_CONFIG ] ; then
 
-  cd ~ || return 1
+  cd $HOME || return 1
   echo "User defined config found"
   echo "Making tar file, this may take a while"
-  tar  -cvhf "$TAR" --verbatim-files-from --files-from=$USER_CONFIG ##TODO: Progress bar
+	tar  -ch --verbatim-files-from --files-from=$USER_CONFIG | pv > $TAR
+	#tar  -cvhf "$TAR" --verbatim-files-from --files-from=$USER_CONFIG
 
-#need to use pv or some other method to create an ETA or progress bar
+#TODO; Use pv or some other method to create an ETA or progress bar
 
 else
-  echo "No modified config file found, defaulting to "tar"-ing entire home directory"
-  cd ~ || return 1
+  echo "No modified config file found, defaulting to tar-ing entire home directory"
+  cd $HOME || return 1
   echo "Making tar file, this may take a while"
-  tar -cvhf "$TAR" --files-from=$DEFAULT_CONFIG ##TODO: Progress bar
+  tar -ch --files-from=$DEFAULT_CONFIG | pv > $TAR
 fi
 
 #Setup target directory, and move resulting tar file
@@ -55,14 +57,14 @@ else
   mkdir $TARGET
 fi
 
-mv "$TAR" $TARGET
+mv "$TAR" $TARGET	#TODO; add pv bar
 echo "tar file completed"
-echo "$TAR moved to ~/tar-pit"
+echo "$TAR moved to $HOME/tar-pit"
 
 
 cd $TARGET || return 1
 
-#Use du to dump size of Tar file
+#Use ls to dump size of Tar file
 ls -s "$TAR" > chunk_size.txt
 
 #Use awk and bash to strip all non-numerical characters
@@ -81,10 +83,11 @@ TAR_SIZE=$(( TAR_SIZE / CONVERSION))
 #Add one to ensure Tar file will always be < 7.9, and to ensure CHUNKS > 0
 CHUNKS=$(( TAR_SIZE / 10))
 CHUNKS=$(( CHUNKS + 1))
-
+clear
 if [ $CHUNKS -lt 2 ]; then
   echo "This tar file will fit on one DVD, no reason to split, compressing instead"
-	gzip -7 "$TAR"
+	pv $TAR | gzip -9 > $COMP_TAR
+	echo "Gzip is done compressing, exiting tar-pit"
 else
   echo "Splitting tarball, please be patient"	#TODO; Add compression for individual chunks
   tarsplit "$TAR" $CHUNKS

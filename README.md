@@ -42,5 +42,3 @@ Roadmap
 **TODO: Verify chunk sizes**
 
 **TODO: Auto burn to cd**
-
-**TODO: Make a progress bar for tar process**
