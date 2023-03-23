@@ -37,6 +37,8 @@ privileges in .config and ~
 
 Roadmap
 --
+**TODO: Create user config file**
+
 **TODO: Create tar, run tarsplit, compress split tar file(s)**
 
 **TODO: Verify chunk sizes**
