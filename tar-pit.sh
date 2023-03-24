@@ -122,6 +122,7 @@ CHUNKS=$(( CHUNKS + 1))
 if [ $CHUNKS -lt 2 ]; then
   echo "This tar file will fit on one DVD, no reason to split, compressing at compression level $COMPRESSION_LEVEL"
 	pv $TAR | gzip $COMPRESSION_LEVEL > $COMP_TAR
+	rm $TAR
 	clear
 	echo "Gzip is done compressing, exiting tar-pit"
 else
