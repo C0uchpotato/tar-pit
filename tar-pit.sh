@@ -16,7 +16,7 @@ else
 	mkdir $DIR
 fi
 
-cd $HOME || return 1
+cd $HOME || exit 1
 #Look for user config file
 ls -a $HOME > $DEFAULT_CONFIG
 
@@ -30,12 +30,12 @@ fi
 echo "Configuration complete"
 echo "home_index updated"
 
-#Read from either default or user config, then tar respective selections; return 1 for a failure
-cd $HOME/.config/tar-pit || return 1
+#Read from either default or user config, then tar respective selections; exit 1 for a failure
+cd $HOME/.config/tar-pit || exit 1
 clear
 if [ -e $USER_CONFIG ] ; then
 
-  cd $HOME || return 1
+  cd $HOME || exit 1
   echo "User defined config found"
   echo "Making tar file, this may take a while"
 	tar  -ch --verbatim-files-from --files-from=$USER_CONFIG | pv > $TAR
@@ -45,7 +45,7 @@ if [ -e $USER_CONFIG ] ; then
 
 else
   echo "No modified config file found, defaulting to tar-ing entire home directory"
-  cd $HOME || return 1
+  cd $HOME || exit 1
   echo "Making tar file, this may take a while"
   tar -ch --files-from=$DEFAULT_CONFIG | pv > $TAR
 fi
@@ -62,7 +62,7 @@ echo "tar file completed"
 echo "$TAR moved to $HOME/tar-pit"
 
 
-cd $TARGET || return 1
+cd $TARGET || exit 1
 
 #Use ls to dump size of Tar file
 ls -s "$TAR" > chunk_size.txt
