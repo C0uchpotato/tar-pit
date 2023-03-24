@@ -1,14 +1,14 @@
 Usage
 --
-~/.config/backup.txt is designed to be a user modified file that holds all of the files (from the users perspective, starting in ~)
+~/.config/tar-pit/backup.txt is designed to be a user modified file that holds all of the files (from the users perspective, starting in ~)
 
 Please create this file if you do not want your entire home directory "tarred", otherwise the program will create this file and select all files under ~
 
 An example will be hosted under example backup.txt
 
-This script (as of now) has no flags, and takes no input from the user while running
+~/.config/tar-pit/conf will be created with sane defaults after the first run of this software, a copy will be hosted under default_conf.
 
-**Warning** If you run this program multiple times, it will overwrite the tar file from previous runs on that day, as each file is named according to the system date
+**Warning:** If you run this program multiple times, it will overwrite the tar file from previous runs on that day, as each file is named according to the system date
 
 
 
@@ -37,7 +37,6 @@ privileges in .config and ~
 
 Roadmap
 --
-**TODO: Create user config file**
 
 **TODO: Create tar, run tarsplit, compress split tar file(s)**
 
