@@ -43,3 +43,7 @@ Roadmap
 **TODO: Verify chunk sizes**
 
 **TODO: Auto burn to cd**
+
+**TODO: Compress chunks after tarsplit**
+
+**TODO: Create testing**
