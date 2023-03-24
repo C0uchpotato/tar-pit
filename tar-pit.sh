@@ -47,6 +47,8 @@ else
 	#Directory where output files are stored
 	export TARGET=$HOME/tar-pit
 
+	#Split files to fit on 7.9 GB dvd's
+	export SPLIT=false
 	" >> $USER_CONFIG
 
 fi
@@ -116,19 +118,29 @@ TAR_SIZE=$(( TAR_SIZE / CONVERSION))
 
 #Determine how many chunks needed for tarsplit
 #Add one to ensure Tar file will always be < 7.9, and to ensure CHUNKS > 0
-CHUNKS=$(( TAR_SIZE / 10))
+CHUNKS=$(( TAR_SIZE / 7))
 CHUNKS=$(( CHUNKS + 1))
-#
-if [ $CHUNKS -lt 2 ]; then
-  echo "This tar file will fit on one DVD, no reason to split, compressing at compression level $COMPRESSION_LEVEL"
+
+#Check if user wants files split, if true then split to ~7GB chunks, if false, compress using $COMPRESSION_LEVEL
+if [ "$SPLIT" = true ]; then
+	if [ $CHUNKS -lt 2 ]; then
+	  echo "This tar file will fit on one DVD, no reason to split, compressing at compression level $COMPRESSION_LEVEL"
+		pv $TAR | gzip $COMPRESSION_LEVEL > $COMP_TAR
+		rm $TAR
+		clear
+		echo "Gzip is done compressing, exiting tar-pit"
+	else
+	  echo "Splitting tarball, please be patient"	#TODO; Add compression for individual chunks
+	  tarsplit "$TAR" $CHUNKS
+	  rm "$TAR"
+	  echo "tarsplit has finished"
+	fi
+else
+	echo "This tar file will fit on one DVD, no reason to split, compressing at compression level $COMPRESSION_LEVEL"
 	pv $TAR | gzip $COMPRESSION_LEVEL > $COMP_TAR
+	rm $TAR
 	clear
 	echo "Gzip is done compressing, exiting tar-pit"
-else
-  echo "Splitting tarball, please be patient"	#TODO; Add compression for individual chunks
-  tarsplit "$TAR" $CHUNKS
-  rm "$TAR"
-  echo "tarsplit has finished"
 fi
 
 #TODO; Verify chunk sizes

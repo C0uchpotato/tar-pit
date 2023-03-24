@@ -27,3 +27,6 @@ export COMP_TAR=$(date '+%m-%d-%y').tar.gz
 
 #Directory where output files are stored
 export TARGET=$HOME/tar-pit
+
+#Split files to fit on 7.9 GB dvd's
+export SPLIT=false
