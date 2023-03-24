@@ -1,51 +1,88 @@
 #!/bin/bash
-
-DIR=~/.config/tar-pit
-USER_CONFIG=~/.config/tar-pit/backup.txt
-DEFAULT_CONFIG=~/.config/tar-pit/home_index.txt
+USER_CONFIG=$HOME/.config/tar-pit/conf
+CONFIG_DIR=$HOME/.config/tar-pit
 CONVERSION=1074000
-TAR="$(date '+%m-%d-%y')".tar
-TARGET=~/tar-pit
-#Establish config directory
-#TODO; Create config file for user-enabled options
 
-if [ -d "$DIR" ] ; then
+if [ -d "$CONFIG_DIR" ] ; then
 	echo "Configuration file exists"
 else
-	mkdir $DIR
+	mkdir $CONFIG_DIR
 fi
 
-cd ~ || return 1
-#Look for user config file
-ls -a ~ > $DEFAULT_CONFIG
-
 if [ -e "$USER_CONFIG" ] ; then
-  echo "User defined config exists"
+	echo "User modified config found"
+	source $HOME/.config/tar-pit/conf
 else
-  echo "No user defined config exists"
+	echo "No user modified config found, creating a default"
+	touch $USER_CONFIG
+
+	echo "
+	#!/bin/bash
+
+	#This defines the compression level for gzip at the end of the script, acceptable values are between 1-9
+	export COMPRESSION_LEVEL=-6
+
+	#Will be used in future releases
+	export EXTERNAL_STORAGE=
+
+	#Will be used in future releases
+	export DVD_DRIVE=/mnt/cdrom
+
+	#Will be used in future releases
+	export AUTO_BURN=false
+
+	#Will be used in future releases
+	export AUTO_CP_TO_EXTERN=false
+
+	#Path to the file which lists all files to be backed up
+	export USER_DEFINED_BACKUPS=$HOME/.config/tar-pit/backup.txt
+
+	#List of all files in $HOME
+	export DEFAULT_BACKUPS=$HOME/.config/tar-pit/home_index.txt
+
+	#Names the tar and tar.gz files created
+	export TAR=$(date '+%m-%d-%y').tar
+	export COMP_TAR=$(date '+%m-%d-%y').tar.gz
+
+	#Directory where output files are stored
+	export TARGET=$HOME/tar-pit
+
+	" >> $USER_CONFIG
+
+fi
+
+cd $HOME || exit 1
+#Look for user config file
+ls -a $HOME > $DEFAULT_BACKUPS
+
+if [ -e "$USER_DEFINED_BACKUPS" ] ; then
+  echo "User has defined directories to backup"
+else
+  echo "User has not definied directories to backup"
 fi
 
 
 echo "Configuration complete"
 echo "home_index updated"
 
-#Read from either default or user config, then tar respective selections
-cd ~/.config/tar-pit || return 1
+#Read from either default or user config, then tar respective selections; exit 1 for a failure
+cd $HOME/.config/tar-pit || exit 1
 
-if [ -e $USER_CONFIG ] ; then
+if [ -e $USER_DEFINED_BACKUPS ] ; then
 
-  cd ~ || return 1
+  cd $HOME || exit 1
   echo "User defined config found"
   echo "Making tar file, this may take a while"
-  tar  -cvhf "$TAR" --verbatim-files-from --files-from=$USER_CONFIG ##TODO: Progress bar
-
-#need to use pv or some other method to create an ETA or progress bar
+	tar  -ch --verbatim-files-from --files-from=$USER_DEFINED_BACKUPS | pv > $TAR
+	#tar  -cvhf "$TAR" --verbatim-files-from --files-from=$USER_DEFINED_BACKUPS
+	clear
 
 else
-  echo "No modified config file found, defaulting to "tar"-ing entire home directory"
-  cd ~ || return 1
+  echo "No modified config file found, defaulting to tar-ing entire home directory"
+  cd $HOME || exit 1
   echo "Making tar file, this may take a while"
-  tar -cvhf "$TAR" --files-from=$DEFAULT_CONFIG ##TODO: Progress bar
+  tar -ch --files-from=$DEFAULT_BACKUPS | pv > $TAR
+	clear
 fi
 
 #Setup target directory, and move resulting tar file
@@ -55,14 +92,14 @@ else
   mkdir $TARGET
 fi
 
-mv "$TAR" $TARGET
+mv "$TAR" $TARGET	#TODO; add pv bar
 echo "tar file completed"
-echo "$TAR moved to ~/tar-pit"
+echo "$TAR moved to $HOME/tar-pit"
 
 
-cd $TARGET || return 1
+cd $TARGET || exit 1
 
-#Use du to dump size of Tar file
+#Use ls to dump size of Tar file
 ls -s "$TAR" > chunk_size.txt
 
 #Use awk and bash to strip all non-numerical characters
@@ -81,10 +118,12 @@ TAR_SIZE=$(( TAR_SIZE / CONVERSION))
 #Add one to ensure Tar file will always be < 7.9, and to ensure CHUNKS > 0
 CHUNKS=$(( TAR_SIZE / 10))
 CHUNKS=$(( CHUNKS + 1))
-
+#
 if [ $CHUNKS -lt 2 ]; then
-  echo "This tar file will fit on one DVD, no reason to split, compressing instead"
-	gzip -7 "$TAR"
+  echo "This tar file will fit on one DVD, no reason to split, compressing at compression level $COMPRESSION_LEVEL"
+	pv $TAR | gzip $COMPRESSION_LEVEL > $COMP_TAR
+	clear
+	echo "Gzip is done compressing, exiting tar-pit"
 else
   echo "Splitting tarball, please be patient"	#TODO; Add compression for individual chunks
   tarsplit "$TAR" $CHUNKS
