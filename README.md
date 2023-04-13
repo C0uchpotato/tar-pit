@@ -39,6 +39,8 @@ privileges in .config and ~
 Roadmap
 --
 
+**TODO: Add pacmanfile option**
+
 **TODO: Create tar, run tarsplit, compress split tar file(s)**
 
 **TODO: Verify chunk sizes**
@@ -48,3 +50,7 @@ Roadmap
 **TODO: Compress chunks after tarsplit**
 
 **TODO: Create testing**
+
+**TODO: Support external target locations**
+
+**TODO: Add sha512 hashing for temp files**

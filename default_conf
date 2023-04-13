@@ -3,16 +3,16 @@
 #This defines the compression level for gzip at the end of the script, acceptable values are between 1-9
 export COMPRESSION_LEVEL=-6
 
-#Will be used in future releases
-export EXTERNAL_STORAGE=
+#WIP
+export EXTERNAL_STORAGE=smb://192.168.1.101/jhelmer/tar-pit
 
-#Will be used in future releases
+#WIP
 export DVD_DRIVE=/mnt/cdrom
 
-#Will be used in future releases
+#WIP
 export AUTO_BURN=false
 
-#Will be used in future releases
+#WIP
 export AUTO_CP_TO_EXTERN=false
 
 #Path to the file which lists all files to be backed up
@@ -27,6 +27,14 @@ export COMP_TAR=$(date '+%m-%d-%y').tar.gz
 
 #Directory where output files are stored
 export TARGET=$HOME/tar-pit
+#Leave SECONDARY_TARGET as "null" if not in use
+#format this as "/dev/devicename/folder; E.g. /dev/sda1/tar-pit-backups"
+export SECONDARY_TARGET=null
 
 #Split files to fit on 7.9 GB dvd's
+#Not functional
 export SPLIT=false
+
+#Add dump of current programs if pacmanfile is installed on arch systems
+# $HOME/.config must be backed up in order to save this
+export pacmanfile=false
