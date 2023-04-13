@@ -6,7 +6,7 @@ CONVERSION=1074000
 if [ -d "$CONFIG_DIR" ] ; then
 	echo "Configuration file exists"
 else
-	mkdir $CONFIG_DIR
+	mkdir "$CONFIG_DIR"
 fi
 
 if [ -e "$USER_CONFIG" ] ; then
@@ -14,7 +14,7 @@ if [ -e "$USER_CONFIG" ] ; then
 	source $HOME/.config/tar-pit/conf
 else
 	echo "No user modified config found, creating a default"
-	touch $USER_CONFIG
+	touch "$USER_CONFIG"
 
 	echo "
 	#!/bin/bash
@@ -49,7 +49,7 @@ else
 
 	#Split files to fit on 7.9 GB dvd's
 	export SPLIT=false
-	" >> $USER_CONFIG
+	" >> "$USER_CONFIG"
 
 fi
 
@@ -66,6 +66,20 @@ fi
 
 echo "Configuration complete"
 echo "home_index updated"
+
+#Pacmanfile option for arch users
+if [ pacmanfile != false ] ; then
+	if pacman -Qqm pacmanfile ; then
+		echo "pacmanfile is installed"
+	else
+		echo "please install pacmanfile"
+	fi
+	pacmanfile dump
+	echo "pacmanfile dump complete. Your current packages have been written to $HOME/.config/pacmanfile/pacmanfile-dumped.txt"
+else
+	echo "Pacmanfile option not selected"
+fi
+
 
 #Read from either default or user config, then tar respective selections; exit 1 for a failure
 cd $HOME/.config/tar-pit || exit 1
@@ -94,7 +108,7 @@ else
   mkdir $TARGET
 fi
 
-mv "$TAR" $TARGET	#TODO; add pv bar
+mv "$TAR" $TARGET
 echo "tar file completed"
 echo "$TAR moved to $HOME/tar-pit"
 
@@ -128,19 +142,23 @@ if [ "$SPLIT" = true ]; then
 		pv $TAR | gzip $COMPRESSION_LEVEL > $COMP_TAR
 		rm $TAR
 		clear
+			if [ $SECONDARY_TARGET != "null" ]; then
+				cp $COMP_TAR $SECONDARY_TARGET
+			else
+				print "No secondary target"
+			fi
 		echo "Gzip is done compressing, exiting tar-pit"
 	else
 	  echo "Splitting tarball, please be patient"	#TODO; Add compression for individual chunks
-	  tarsplit "$TAR" $CHUNKS
+	  tarsplit "$TAR" $CHUNKS		#TODO; Verify chunk size
 	  rm "$TAR"
 	  echo "tarsplit has finished"
 	fi
 else
-	echo "This tar file will fit on one DVD, no reason to split, compressing at compression level $COMPRESSION_LEVEL"
+	echo "The file of $TAR_SIZE will be compressed at $COMPRESSION_LEVEL"
 	pv $TAR | gzip $COMPRESSION_LEVEL > $COMP_TAR
-	rm $TAR
+	rm "$TAR"
 	clear
-	echo "Gzip is done compressing, exiting tar-pit"
+	echo "Gzip is done compressing"
 fi
 
-#TODO; Verify chunk sizes
